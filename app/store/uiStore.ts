@@ -7,7 +7,7 @@ interface UIState {
   searchOpen: boolean;
   mobileMenuOpen: boolean;
   readingProgress: number;
-  
+
   // Actions
   setTheme: (theme: 'light' | 'dark' | 'system') => void;
   toggleTheme: () => void;
@@ -31,20 +31,22 @@ export const useUIStore = create<UIState>()(
 
       setTheme: (theme) => {
         set({ theme });
-        
-        // Apply theme to document
-        const root = document.documentElement;
-        if (theme === 'dark') {
-          root.classList.add('dark');
-        } else if (theme === 'light') {
-          root.classList.remove('dark');
-        } else {
-          // System theme
-          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          if (prefersDark) {
+
+        // Apply theme to document (only on client)
+        if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+          const root = document.documentElement;
+          if (theme === 'dark') {
             root.classList.add('dark');
-          } else {
+          } else if (theme === 'light') {
             root.classList.remove('dark');
+          } else {
+            // System theme
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (prefersDark) {
+              root.classList.add('dark');
+            } else {
+              root.classList.remove('dark');
+            }
           }
         }
       },
@@ -56,21 +58,21 @@ export const useUIStore = create<UIState>()(
       },
 
       setSidebarOpen: (open) => set({ sidebarOpen: open }),
-      
+
       toggleSidebar: () => {
         const { sidebarOpen } = get();
         set({ sidebarOpen: !sidebarOpen });
       },
 
       setSearchOpen: (open) => set({ searchOpen: open }),
-      
+
       toggleSearch: () => {
         const { searchOpen } = get();
         set({ searchOpen: !searchOpen });
       },
 
       setMobileMenuOpen: (open) => set({ mobileMenuOpen: open }),
-      
+
       toggleMobileMenu: () => {
         const { mobileMenuOpen } = get();
         set({ mobileMenuOpen: !mobileMenuOpen });

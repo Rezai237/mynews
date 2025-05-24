@@ -18,16 +18,18 @@ export default function Layout() {
     // Initialize theme
     setTheme(theme);
 
-    // Handle system theme changes
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleChange = () => {
-      if (theme === 'system') {
-        setTheme('system');
-      }
-    };
+    // Handle system theme changes (only on client)
+    if (typeof window !== 'undefined') {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      const handleChange = () => {
+        if (theme === 'system') {
+          setTheme('system');
+        }
+      };
 
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
+      mediaQuery.addEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener('change', handleChange);
+    }
   }, [initialize, setTheme, theme]);
 
   if (loading) {
@@ -45,7 +47,7 @@ export default function Layout() {
         <Outlet />
       </main>
       <Footer />
-      
+
       {/* Toast Notifications */}
       <Toaster
         position="top-right"
