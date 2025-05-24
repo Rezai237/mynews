@@ -1,12 +1,109 @@
-# Welcome to React Router!
+# 🚀 Techsy.News - Modern Technology News Platform
 
-A modern, production-ready template for building full-stack React applications using React Router.
+A comprehensive, feature-rich technology news and blog platform built with React Router v7, Tailwind CSS, and Supabase.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+## ✨ Features
 
-## Features
+### 🎨 Modern UI/UX
+- **Responsive Design**: Mobile-first approach with Tailwind CSS
+- **Dark/Light Mode**: System preference detection with manual toggle
+- **Smooth Animations**: Framer Motion for delightful interactions
+- **Custom Components**: Reusable UI components with consistent design
 
-- 🚀 Server-side rendering
+### 📝 Content Management
+- **Rich Text Editor**: TipTap editor for creating and editing articles
+- **Media Library**: Image upload and management system
+- **Category & Tag System**: Organize content with hierarchical categories and tags
+- **Content Scheduling**: Schedule articles for future publication
+- **SEO Optimization**: Meta tags, Open Graph, and structured data
+
+### 👥 User Management
+- **Authentication**: Secure user registration and login with Supabase Auth
+- **User Profiles**: Customizable user profiles with avatars and bios
+- **Role-based Access**: User, Author, and Admin roles with different permissions
+- **Social Features**: Comments, likes, bookmarks, and sharing
+
+### 🔍 Advanced Features
+- **Full-text Search**: Powerful search with filters and autocomplete
+- **Analytics Dashboard**: Real-time analytics and insights
+- **Newsletter System**: Email subscription and management
+- **Web3 Section**: Dedicated area for blockchain and cryptocurrency content
+- **PWA Support**: Progressive Web App capabilities
+- **RSS Feed**: Auto-generated RSS for content syndication
+
+### 🛡️ Security & Performance
+- **Row Level Security**: Supabase RLS for data protection
+- **Optimized Images**: Automatic image optimization and lazy loading
+- **Caching**: Intelligent caching strategies
+- **Error Boundaries**: Graceful error handling
+
+## 🛠️ Technology Stack
+
+### Frontend
+- **React 19**: Latest React with concurrent features
+- **React Router v7**: File-based routing with SSR support
+- **TypeScript**: Type-safe development
+- **Tailwind CSS**: Utility-first CSS framework
+- **Framer Motion**: Animation library
+- **Zustand**: Lightweight state management
+
+### Backend & Database
+- **Supabase**: PostgreSQL database with real-time subscriptions
+- **Supabase Auth**: Authentication and user management
+- **Supabase Storage**: File storage and CDN
+- **Row Level Security**: Database-level security policies
+
+### Development Tools
+- **Vite**: Fast build tool and dev server
+- **ESLint**: Code linting
+- **Prettier**: Code formatting
+- **React Hook Form**: Form handling with validation
+- **Zod**: Schema validation
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18+
+- npm or yarn
+- Supabase account
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/yourusername/techsy-news.git
+cd techsy-news
+```
+
+### 2. Install Dependencies
+```bash
+npm install
+```
+
+### 3. Set Up Supabase
+
+1. Create a new project at [supabase.com](https://supabase.com)
+2. Go to Settings > API to get your project URL and anon key
+3. Copy `.env.example` to `.env` and fill in your Supabase credentials:
+
+```env
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+### 4. Set Up Database
+
+Run the SQL migrations in your Supabase SQL editor:
+
+1. Copy and run `supabase/migrations/001_initial_schema.sql`
+2. Copy and run `supabase/migrations/002_rls_policies.sql`
+3. Copy and run `supabase/migrations/003_functions.sql`
+4. Copy and run `supabase/migrations/004_seed_data.sql`
+
+### 5. Start Development Server
+```bash
+npm run dev
+```
+
+Visit `http://localhost:5173` to see your application!
 - ⚡️ Hot Module Replacement (HMR)
 - 📦 Asset bundling and optimization
 - 🔄 Data loading and mutations
