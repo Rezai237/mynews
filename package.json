@@ -4,13 +4,9 @@
   "type": "module",
   "scripts": {
     "build": "react-router build",
-    "build:prod": "NODE_ENV=production react-router build",
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
-    "start:prod": "NODE_ENV=production react-router-serve ./build/server/index.js",
-    "typecheck": "react-router typegen && tsc",
-    "deploy:build": "npm run build:prod && npm run deploy:package",
-    "deploy:package": "node scripts/package-for-deployment.js"
+    "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.4",
