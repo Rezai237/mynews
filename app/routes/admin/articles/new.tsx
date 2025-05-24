@@ -10,6 +10,7 @@ import { useArticlesStore } from '../../../store/articlesStore';
 import RichTextEditor from '../../../components/editor/RichTextEditor';
 import Button from '../../../components/ui/Button';
 import Input from '../../../components/ui/Input';
+import ImageUpload from '../../../components/ui/ImageUpload';
 import { generateSlug, calculateReadingTime } from '../../../lib/utils';
 import toast from 'react-hot-toast';
 import type { Route } from "./+types/new";
@@ -42,6 +43,7 @@ export default function NewArticle() {
 
   const [content, setContent] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [featuredImage, setFeaturedImage] = useState('');
   const [loading, setLoading] = useState(false);
   const [previewMode, setPreviewMode] = useState(false);
 
@@ -105,7 +107,7 @@ export default function NewArticle() {
         slug: data.slug,
         excerpt: data.excerpt,
         content,
-        featuredImage: data.featuredImage,
+        featuredImage: featuredImage || data.featuredImage,
         author_id: user!.id,
         categoryId: data.categoryId,
         status: data.status,
@@ -377,15 +379,14 @@ export default function NewArticle() {
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                   Featured Image
                 </h3>
-                <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center">
-                  <Upload className="w-8 h-8 mx-auto text-gray-400 mb-2" />
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Click to upload or drag and drop
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                    PNG, JPG, GIF up to 10MB
-                  </p>
-                </div>
+                <ImageUpload
+                  value={featuredImage}
+                  onChange={(url) => {
+                    setFeaturedImage(url);
+                    setValue('featuredImage', url);
+                  }}
+                  placeholder="Enter image URL"
+                />
               </motion.div>
             </div>
           </div>
