@@ -31,6 +31,7 @@ interface ArticlesState {
     offset?: number;
   }) => Promise<void>;
   fetchFeaturedArticles: () => Promise<void>;
+  fetchAllArticles: () => Promise<void>;
   fetchCategories: () => Promise<void>;
   fetchTags: () => Promise<void>;
   fetchArticleBySlug: (slug: string) => Promise<ArticleWithDetails | null>;
@@ -115,6 +116,37 @@ export const useArticlesStore = create<ArticlesState>((set, get) => ({
 
   fetchFeaturedArticles: async () => {
     await get().fetchArticles({ featured: true, limit: 6 });
+  },
+
+  fetchAllArticles: async () => {
+    set({ loading: true });
+    try {
+      const { data, error } = await supabase
+        .from('articles')
+        .select(`
+          *,
+          author:profiles!articles_author_id_fkey(id, full_name, avatar_url),
+          category:categories!articles_category_id_fkey(*),
+          article_tags(tag:tags(*))
+        `)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching all articles:', error);
+        return;
+      }
+
+      const articlesWithTags = data?.map(article => ({
+        ...article,
+        tags: article.article_tags?.map((at: any) => at.tag) || []
+      })) || [];
+
+      set({ articles: articlesWithTags });
+    } catch (error) {
+      console.error('Error fetching all articles:', error);
+    } finally {
+      set({ loading: false });
+    }
   },
 
   fetchCategories: async () => {
