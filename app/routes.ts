@@ -16,7 +16,13 @@ export default [
     route("settings", "routes/settings.tsx"),
     route("bookmarks", "routes/bookmarks.tsx"),
     route("admin", "routes/admin.tsx"),
+    route("admin/articles", "routes/admin/articles.tsx"),
     route("admin/articles/new", "routes/admin/articles/new.tsx"),
     route("admin/articles/:id/edit", "routes/admin/articles/edit.tsx"),
+    route("admin/categories", "routes/admin/categories.tsx"),
+    route("admin/tags", "routes/admin/tags.tsx"),
+    route("admin/analytics", "routes/admin/analytics.tsx"),
+    route("admin/comments", "routes/admin/comments.tsx"),
+    route("admin/settings", "routes/admin/settings.tsx"),
   ])
 ] satisfies RouteConfig;
