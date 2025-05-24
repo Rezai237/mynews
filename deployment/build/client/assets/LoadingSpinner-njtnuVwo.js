@@ -1,0 +1,1 @@
+import{o as e}from"./chunk-D4RADZKF-DUJFVFZr.js";import{b as n}from"./utils-Dmsv2dCC.js";function m({size:r="md",className:s}){const o={sm:"w-4 h-4",md:"w-6 h-6",lg:"w-8 h-8"};return e.jsx("div",{className:n("animate-spin rounded-full border-2 border-gray-300 border-t-blue-600",o[r],s)})}export{m as L};
