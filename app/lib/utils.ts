@@ -66,7 +66,7 @@ export function throttle<T extends (...args: any[]) => any>(
 }
 
 export function getImageUrl(path: string | null): string {
-  if (!path) return '/images/placeholder.jpg';
+  if (!path) return '/images/placeholder.svg';
   if (path.startsWith('http')) return path;
   return `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/images/${path}`;
 }
@@ -76,28 +76,46 @@ export function validateEmail(email: string): boolean {
   return emailRegex.test(email);
 }
 
+export function validateImageUrl(url: string): boolean {
+  try {
+    new URL(url);
+    return /\.(jpg|jpeg|png|gif|webp)$/i.test(url) || url.includes('unsplash.com') || url.includes('images.') || url.includes('cdn.');
+  } catch {
+    return false;
+  }
+}
+
+export function getImageDimensions(url: string): Promise<{ width: number; height: number }> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve({ width: img.width, height: img.height });
+    img.onerror = reject;
+    img.src = url;
+  });
+}
+
 export function validatePassword(password: string): {
   isValid: boolean;
   errors: string[];
 } {
   const errors: string[] = [];
-  
+
   if (password.length < 8) {
     errors.push('Password must be at least 8 characters long');
   }
-  
+
   if (!/[A-Z]/.test(password)) {
     errors.push('Password must contain at least one uppercase letter');
   }
-  
+
   if (!/[a-z]/.test(password)) {
     errors.push('Password must contain at least one lowercase letter');
   }
-  
+
   if (!/\d/.test(password)) {
     errors.push('Password must contain at least one number');
   }
-  
+
   return {
     isValid: errors.length === 0,
     errors,
@@ -129,12 +147,12 @@ export function getColorFromString(str: string): string {
     '#8b5cf6', '#a855f7', '#d946ef', '#ec4899',
     '#f43f5e'
   ];
-  
+
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     hash = str.charCodeAt(i) + ((hash << 5) - hash);
   }
-  
+
   return colors[Math.abs(hash) % colors.length];
 }
 
