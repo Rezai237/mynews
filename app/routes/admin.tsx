@@ -31,33 +31,44 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Admin() {
   const { user, profile } = useAuthStore();
-  const { articles, categories, loading } = useArticlesStore();
+  const { articles, categories, loading, fetchAllArticles } = useArticlesStore();
   const [stats, setStats] = useState({
     totalArticles: 0,
+    publishedArticles: 0,
+    draftArticles: 0,
     totalViews: 0,
     totalLikes: 0,
     totalUsers: 0,
-    publishedToday: 0,
-    draftArticles: 0
+    publishedToday: 0
   });
+
+  useEffect(() => {
+    // Fetch all articles for admin dashboard (including drafts)
+    fetchAllArticles();
+  }, [fetchAllArticles]);
 
   useEffect(() => {
     // Calculate stats from articles
     if (articles.length > 0) {
-      const totalViews = articles.reduce((sum, article) => sum + article.views, 0);
-      const totalLikes = articles.reduce((sum, article) => sum + article.likes, 0);
+      const publishedArticles = articles.filter(article => article.status === 'published');
+      const draftArticles = articles.filter(article => article.status === 'draft');
+
+      const totalViews = publishedArticles.reduce((sum, article) => sum + article.views, 0);
+      const totalLikes = publishedArticles.reduce((sum, article) => sum + article.likes, 0);
+
       const today = new Date().toDateString();
-      const publishedToday = articles.filter(article =>
-        new Date(article.published_at).toDateString() === today
+      const publishedToday = publishedArticles.filter(article =>
+        article.published_at && new Date(article.published_at).toDateString() === today
       ).length;
 
       setStats({
         totalArticles: articles.length,
+        publishedArticles: publishedArticles.length,
+        draftArticles: draftArticles.length,
         totalViews,
         totalLikes,
-        totalUsers: 1250, // Mock data
-        publishedToday,
-        draftArticles: 15 // Mock data
+        totalUsers: 1250, // Mock data - will be replaced with real data
+        publishedToday
       });
     }
   }, [articles]);
@@ -82,29 +93,33 @@ export default function Admin() {
     {
       title: 'Total Articles',
       value: formatNumber(stats.totalArticles),
+      subtitle: `${stats.publishedArticles} published, ${stats.draftArticles} drafts`,
       icon: FileText,
       color: 'blue',
       change: '+12%'
     },
     {
-      title: 'Total Views',
-      value: formatNumber(stats.totalViews),
+      title: 'Published Articles',
+      value: formatNumber(stats.publishedArticles),
+      subtitle: `${stats.publishedToday} published today`,
       icon: Eye,
       color: 'green',
       change: '+8%'
     },
     {
-      title: 'Total Likes',
-      value: formatNumber(stats.totalLikes),
-      icon: Heart,
-      color: 'red',
+      title: 'Total Views',
+      value: formatNumber(stats.totalViews),
+      subtitle: 'From published articles',
+      icon: TrendingUp,
+      color: 'purple',
       change: '+15%'
     },
     {
-      title: 'Total Users',
-      value: formatNumber(stats.totalUsers),
-      icon: Users,
-      color: 'purple',
+      title: 'Total Likes',
+      value: formatNumber(stats.totalLikes),
+      subtitle: 'User engagement',
+      icon: Heart,
+      color: 'red',
       change: '+5%'
     }
   ];
@@ -116,6 +131,13 @@ export default function Admin() {
       icon: Plus,
       href: '/admin/articles/new',
       color: 'blue'
+    },
+    {
+      title: 'Manage Articles',
+      description: 'View and edit all articles',
+      icon: FileText,
+      href: '/admin/articles',
+      color: 'indigo'
     },
     {
       title: 'Manage Categories',
@@ -195,6 +217,11 @@ export default function Admin() {
                         <p className="text-2xl font-bold text-gray-900 dark:text-white">
                           {stat.value}
                         </p>
+                        {stat.subtitle && (
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                            {stat.subtitle}
+                          </p>
+                        )}
                         <p className="text-sm text-green-600 dark:text-green-400 mt-1">
                           {stat.change} from last month
                         </p>
@@ -259,16 +286,18 @@ export default function Admin() {
                   <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                     Recent Articles
                   </h2>
-                  <Button variant="outline" size="sm">
-                    View All
-                  </Button>
+                  <Link to="/admin/articles">
+                    <Button variant="outline" size="sm">
+                      View All
+                    </Button>
+                  </Link>
                 </div>
                 <div className="space-y-4">
                   {recentArticles.length > 0 ? (
                     recentArticles.map((article) => (
                       <div key={article.id} className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                         <img
-                          src={article.featured_image || '/images/placeholder.jpg'}
+                          src={article.featured_image || '/images/placeholder.svg'}
                           alt={article.title}
                           className="w-12 h-12 rounded object-cover"
                         />
@@ -311,9 +340,11 @@ export default function Admin() {
                   <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                     Analytics Overview
                   </h2>
-                  <Button variant="outline" size="sm">
-                    View Details
-                  </Button>
+                  <Link to="/admin/analytics">
+                    <Button variant="outline" size="sm">
+                      View Details
+                    </Button>
+                  </Link>
                 </div>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-700">
